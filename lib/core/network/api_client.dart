@@ -1,0 +1,48 @@
+import 'package:dio/dio.dart';
+
+class ApiClient {
+  final Dio _dio;
+
+  ApiClient({
+    required String baseUrl,
+    required bool enableLogging,
+  }) : _dio = Dio(
+          BaseOptions(
+            baseUrl: baseUrl,
+            connectTimeout: const Duration(seconds: 15),
+            receiveTimeout: const Duration(seconds: 15),
+          ),
+        ) {
+    if (enableLogging) {
+      _dio.interceptors.add(
+        LogInterceptor(
+          requestBody: true,
+          responseBody: true,
+        ),
+      );
+    }
+  }
+
+  Dio get rawDio => _dio;
+
+  Future<Map<String, dynamic>> get(
+    String path, {
+    Map<String, dynamic>? queryParameters,
+  }) async {
+    final response = await _dio.get(path,
+        queryParameters: queryParameters);
+    final data = response.data;
+    if (data is Map<String, dynamic>) return data;
+    return {'data': data};
+  }
+
+  Future<Map<String, dynamic>> post(
+    String path, {
+    Map<String, dynamic>? data,
+  }) async {
+    final response = await _dio.post(path, data: data);
+    final body = response.data;
+    if (body is Map<String, dynamic>) return body;
+    return {'data': body};
+  }
+}
