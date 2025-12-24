@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'auth_notifier.dart';
 // import '../../transactions/presentation/transactions_page.dart';
@@ -24,57 +25,69 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         title: const Text('Login (Finance Demo)'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.w),
         child: Column(
           children: [
             if (state.error != null) // 2
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(8),
+                padding: EdgeInsets.all(8.w),
                 color: Colors.red.withOpacity(0.1),
                 child: Text(
                   state.error!,
-                  style: const TextStyle(color: Colors.red),
+                  style: TextStyle(color: Colors.red, fontSize: 14.sp),
                 ),
               ),
             TextField(
               controller: _emailController,
-              decoration: const InputDecoration(
+              style: TextStyle(fontSize: 16.sp),
+              decoration: InputDecoration(
                 labelText: 'Email',
-                border: OutlineInputBorder(),
+                labelStyle: TextStyle(fontSize: 14.sp),
+                border: const OutlineInputBorder(),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h),
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12.h),
             TextField(
               controller: _passwordController,
               obscureText: true,
-              decoration: const InputDecoration(
+              style: TextStyle(fontSize: 16.sp),
+              decoration: InputDecoration(
                 labelText: 'Password',
-                border: OutlineInputBorder(),
+                labelStyle: TextStyle(fontSize: 14.sp),
+                border: const OutlineInputBorder(),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h),
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20.h),
             state.isLoading // 3
                 ? const CircularProgressIndicator()
-                : ElevatedButton(
-                    onPressed: () async {
-                      await ref
-                          .read(authNotifierProvider.notifier) // 4
-                          .login(
-                            _emailController.text,
-                            _passwordController.text,
-                          );
+                : SizedBox(
+                    width: double.infinity,
+                    height: 48.h,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        await ref
+                            .read(authNotifierProvider.notifier) // 4
+                            .login(
+                              _emailController.text,
+                              _passwordController.text,
+                            );
 
-                      final user = ref.read(authNotifierProvider).user;
-                      if (user != null && mounted) {
-                        // Navigator.of(context).pushReplacement(
-                        //   MaterialPageRoute(
-                        //     builder: (_) => const TransactionsPage(), // 5
-                        //   ),
-                        // );
-                      }
-                    },
-                    child: const Text('Login'),
+                        final user = ref.read(authNotifierProvider).user;
+                        if (user != null && mounted) {
+                          // Navigator.of(context).pushReplacement(
+                          //   MaterialPageRoute(
+                          //     builder: (_) => const TransactionsPage(), // 5
+                          //   ),
+                          // );
+                        }
+                      },
+                      child: Text('Login', style: TextStyle(fontSize: 16.sp)),
+                    ),
                   ),
           ],
         ),
