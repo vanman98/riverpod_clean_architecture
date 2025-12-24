@@ -8,13 +8,18 @@ import 'app/app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await EnvConfig.init();
+
+  // Print environment config (read from DART_DEFINES in xcconfig)
+  debugPrint("🌍 Environment: ${EnvConfig.env}");
+  debugPrint("🔗 Base URL: ${EnvConfig.apiBaseUrl}");
+  debugPrint("📝 Logging: ${EnvConfig.enableLogging}");
+
   await Firebase.initializeApp(
     options: FirebaseEnvOptions.current,
   );
-  debugPrint("API KEY FIREBASE ${FirebaseEnvOptions.current.apiKey}");
-  debugPrint("APP ID FIREBASE ${FirebaseEnvOptions.current.appId}");
-  debugPrint("BASE URL ${EnvConfig.apiBaseUrl}");
+  debugPrint("🔥 Firebase API Key: ${FirebaseEnvOptions.current.apiKey}");
+  debugPrint("🔥 Firebase App ID: ${FirebaseEnvOptions.current.appId}");
+
   runApp(
     const ProviderScope(
       child: MyApp(),

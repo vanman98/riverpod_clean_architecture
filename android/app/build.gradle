@@ -51,6 +51,13 @@ android {
             resValue "string", "app_name", "Clean Arch (Dev)"
         }
 
+        stg {
+            dimension "env"
+            applicationIdSuffix ".dev" // Use a shared .dev file because Firebase dev/stg share the same configuration.
+            versionNameSuffix "-stg"
+            resValue "string", "app_name", "Clean Arch (Stg)"
+        }
+
         prod {
             dimension "env"
             resValue "string", "app_name", "Clean Arch"
