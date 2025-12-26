@@ -2,8 +2,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_clean_architecture/features/auth/domain/entities.dart';
 part 'auth_state.freezed.dart';
 
-// ---------- STATE ----------
-
 @freezed
 class AuthState with _$AuthState {
   const AuthState._();
@@ -18,13 +16,13 @@ class AuthState with _$AuthState {
   
   @override
   // TODO: implement error
-  String? get error => throw UnimplementedError();
+  String? get error => null;
   
   @override
   // TODO: implement isLoading
-  bool get isLoading => throw UnimplementedError();
+  bool get isLoading => false;
   
   @override
   // TODO: implement user
-  UserEntity? get user => throw UnimplementedError();
+  UserEntity? get user => null;
 }

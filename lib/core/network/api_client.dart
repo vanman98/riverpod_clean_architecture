@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:riverpod_clean_architecture/core/network/auth_interceptor.dart';
+import 'package:riverpod_clean_architecture/core/storage/secure_storage_service.dart';
 
 class ApiClient {
   final Dio _dio;
@@ -6,6 +8,7 @@ class ApiClient {
   ApiClient({
     required String baseUrl,
     required bool enableLogging,
+    SecureStorageService? storageService,
   }) : _dio = Dio(
           BaseOptions(
             baseUrl: baseUrl,
@@ -13,6 +16,10 @@ class ApiClient {
             receiveTimeout: const Duration(seconds: 15),
           ),
         ) {
+    if (storageService != null) {
+      _dio.interceptors.add(AuthInterceptor(storageService));
+    }
+
     if (enableLogging) {
       _dio.interceptors.add(
         LogInterceptor(
@@ -29,8 +36,7 @@ class ApiClient {
     String path, {
     Map<String, dynamic>? queryParameters,
   }) async {
-    final response = await _dio.get(path,
-        queryParameters: queryParameters);
+    final response = await _dio.get(path, queryParameters: queryParameters);
     final data = response.data;
     if (data is Map<String, dynamic>) return data;
     return {'data': data};

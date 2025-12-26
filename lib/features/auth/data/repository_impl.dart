@@ -4,8 +4,12 @@ import 'datasources.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
+  final AuthLocalDataSource localDataSource;
 
-  AuthRepositoryImpl(this.remoteDataSource);
+  AuthRepositoryImpl({
+    required this.remoteDataSource,
+    required this.localDataSource,
+  });
 
   @override
   Future<UserEntity> login({
@@ -17,11 +21,26 @@ class AuthRepositoryImpl implements AuthRepository {
       password: password,
     );
 
+    if (model.token != null) {
+      await localDataSource.saveToken(model.token!);
+    }
+
     return model.toEntity();
   }
 
   @override
-  Future<void> logout() {
-    return remoteDataSource.logout();
+  Future<void> logout() async {
+    await remoteDataSource.logout();
+    await localDataSource.clearTokens();
+  }
+
+  @override
+  Future<String?> getToken() {
+    return localDataSource.getToken();
+  }
+
+  @override
+  Future<String?> getRefreshToken() {
+    return localDataSource.getRefreshToken();
   }
 }

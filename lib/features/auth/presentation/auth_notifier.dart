@@ -1,22 +1,25 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
-import 'package:riverpod_clean_architecture/core/di/app_providers.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:riverpod_clean_architecture/core/usecases/usecase.dart';
-import 'package:riverpod_clean_architecture/core/network/api_client.dart';
-import 'package:riverpod_clean_architecture/features/auth/domain/entities.dart';
-import 'package:riverpod_clean_architecture/features/auth/domain/repository.dart';
+import 'package:riverpod_clean_architecture/features/auth/di/auth_providers.dart';
 import 'package:riverpod_clean_architecture/features/auth/domain/usecases.dart';
-import 'package:riverpod_clean_architecture/features/auth/data/datasources.dart';
-import 'package:riverpod_clean_architecture/features/auth/data/repository_impl.dart';
 import 'package:riverpod_clean_architecture/features/auth/presentation/state/auth_state.dart';
 
-// ---------- NOTIFIER ----------
-class AuthNotifier extends StateNotifier<AuthState> {
-  final LoginUseCase _loginUseCase;
-  final LogoutUseCase _logoutUseCase;
+part 'auth_notifier.g.dart';
 
-  AuthNotifier(this._loginUseCase, this._logoutUseCase)
-      : super(const AuthState());
+@riverpod
+class AuthNotifier extends _$AuthNotifier {
+  late final LoginUseCase _loginUseCase;
+  late final LogoutUseCase _logoutUseCase;
+
+  @override
+  AuthState build() {
+    // ✅ “inject” dependency here
+    _loginUseCase = ref.watch(loginUseCaseProvider);
+    _logoutUseCase = ref.watch(logoutUseCaseProvider);
+
+    // state init
+    return const AuthState();
+  }
 
   Future<void> login(String email, String password) async {
     state = state.copyWith(isLoading: true, error: null);
@@ -32,7 +35,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> logout() async {
-    state = state.copyWith(isLoading: true);
+    state = state.copyWith(isLoading: true, error: null);
 
     try {
       await _logoutUseCase(const NoParams());
@@ -42,36 +45,3 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 }
-
-// ---------- PROVIDERS (DI) ----------
-
-// 2) Remote data source
-final authRemoteDataSourceProvider = Provider<AuthRemoteDataSource>((ref) {
-  final client = ref.watch(apiClientProvider);
-  return AuthRemoteDataSourceImpl(client);
-});
-
-// 3) Repository
-final authRepositoryProvider = Provider<AuthRepository>((ref) {
-  final remote = ref.watch(authRemoteDataSourceProvider);
-  return AuthRepositoryImpl(remote);
-});
-
-// 4) UseCases
-final loginUseCaseProvider = Provider<LoginUseCase>((ref) {
-  final repo = ref.watch(authRepositoryProvider);
-  return LoginUseCase(repo);
-});
-
-final logoutUseCaseProvider = Provider<LogoutUseCase>((ref) {
-  final repo = ref.watch(authRepositoryProvider);
-  return LogoutUseCase(repo);
-});
-
-// 5) Notifier Provider
-final authNotifierProvider =
-    StateNotifierProvider<AuthNotifier, AuthState>((ref) {
-  final login = ref.watch(loginUseCaseProvider);
-  final logout = ref.watch(logoutUseCaseProvider);
-  return AuthNotifier(login, logout);
-});

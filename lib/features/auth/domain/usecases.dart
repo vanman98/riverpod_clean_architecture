@@ -33,3 +33,25 @@ class LogoutUseCase implements UseCase<void, NoParams> {
     return repository.logout();
   }
 }
+
+class GetTokenUseCase implements UseCase<String?, NoParams> {
+  final AuthRepository repository;
+
+  GetTokenUseCase(this.repository);
+
+  @override
+  Future<String?> call(NoParams params) {
+    return repository.getToken();
+  }
+}
+
+class GetRefreshTokenUseCase implements UseCase<String?, NoParams> {
+  final AuthRepository repository;
+
+  GetRefreshTokenUseCase(this.repository);
+
+  @override
+  Future<String?> call(NoParams params) {
+    return repository.getRefreshToken();
+  }
+}
