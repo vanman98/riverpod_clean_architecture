@@ -3,7 +3,7 @@ import 'package:riverpod_clean_architecture/features/auth/domain/entities.dart';
 part 'auth_state.freezed.dart';
 
 @freezed
-class AuthState with _$AuthState {
+abstract class AuthState with _$AuthState {
   const AuthState._();
 
   const factory AuthState({
@@ -13,16 +13,4 @@ class AuthState with _$AuthState {
   }) = _AuthState;
 
   bool get isLoggedIn => user != null;
-  
-  @override
-  // TODO: implement error
-  String? get error => null;
-  
-  @override
-  // TODO: implement isLoading
-  bool get isLoading => false;
-  
-  @override
-  // TODO: implement user
-  UserEntity? get user => null;
 }
