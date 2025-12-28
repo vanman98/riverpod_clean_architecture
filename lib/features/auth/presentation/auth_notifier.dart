@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:riverpod_clean_architecture/core/usecases/usecase.dart';
 import 'package:riverpod_clean_architecture/features/auth/di/auth_providers.dart';
+import 'package:riverpod_clean_architecture/features/auth/domain/entities.dart';
 import 'package:riverpod_clean_architecture/features/auth/domain/usecases.dart';
 import 'package:riverpod_clean_architecture/features/auth/presentation/state/auth_state.dart';
 
@@ -25,10 +26,12 @@ class AuthNotifier extends _$AuthNotifier {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
-      final user = await _loginUseCase(
-        LoginParams(email: email, password: password),
-      );
-      state = state.copyWith(isLoading: false, user: user);
+      // final user = await _loginUseCase(
+      //   LoginParams(email: email, password: password),
+      // );
+      state = state.copyWith(
+          isLoading: false,
+          user: UserEntity(id: '', name: '', email: '', token: ''));
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:riverpod_clean_architecture/app/router/app_routes.dart';
 import 'package:riverpod_clean_architecture/core/utils/validators.dart';
 
 import 'auth_notifier.dart';
@@ -34,8 +36,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       final isLoggedIn = next.user != null;
 
       if (wasLoggedIn == false && isLoggedIn == true) {
-        // TODO: navigate
-        // Navigator.of(context).pushReplacement(...)
+        context.go(AppRoutes.home);
       }
     });
   }
