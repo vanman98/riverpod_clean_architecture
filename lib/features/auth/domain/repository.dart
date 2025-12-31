@@ -1,12 +1,14 @@
+import 'package:dartz/dartz.dart';
+import '../../../core/errors/failure.dart';
 import 'entities.dart';
 
 abstract class AuthRepository {
-  Future<UserEntity> login({
+  Future<Either<Failure, UserEntity>> login({
     required String email,
     required String password,
   });
 
-  Future<void> logout();
+  Future<Either<Failure, void>> logout();
 
   Future<String?> getToken();
 

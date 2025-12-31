@@ -1,7 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:riverpod_clean_architecture/core/errors/failure.dart';
 import 'package:riverpod_clean_architecture/core/usecases/usecase.dart';
 import 'package:riverpod_clean_architecture/features/auth/di/auth_providers.dart';
-import 'package:riverpod_clean_architecture/features/auth/domain/entities.dart';
 import 'package:riverpod_clean_architecture/features/auth/domain/usecases.dart';
 import 'package:riverpod_clean_architecture/features/auth/presentation/state/auth_state.dart';
 
@@ -25,26 +25,42 @@ class AuthNotifier extends _$AuthNotifier {
   Future<void> login(String email, String password) async {
     state = state.copyWith(isLoading: true, error: null);
 
-    try {
-      // final user = await _loginUseCase(
-      //   LoginParams(email: email, password: password),
-      // );
-      state = state.copyWith(
+    final result = await _loginUseCase(
+      LoginParams(email: email, password: password),
+    );
+
+    result.fold(
+      (failure) {
+        state = state.copyWith(
           isLoading: false,
-          user: UserEntity(id: '', name: '', email: '', token: ''));
-    } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
-    }
+          error: failure.userMessage,
+        );
+      },
+      (user) {
+        // Login success
+        state = state.copyWith(
+          isLoading: false,
+          user: user,
+          error: null,
+        );
+      },
+    );
   }
 
   Future<void> logout() async {
     state = state.copyWith(isLoading: true, error: null);
 
-    try {
-      await _logoutUseCase(const NoParams());
-      state = const AuthState();
-    } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
-    }
+    final result = await _logoutUseCase(const NoParams());
+
+    result.fold(
+      (failure) {
+        // Even if logout fails, clear local state
+        state = const AuthState();
+      },
+      (_) {
+        // Logout success
+        state = const AuthState();
+      },
+    );
   }
 }
