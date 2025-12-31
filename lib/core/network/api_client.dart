@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_clean_architecture/core/network/auth_interceptor.dart';
+import 'package:riverpod_clean_architecture/core/network/network_info.dart';
+import 'package:riverpod_clean_architecture/core/network/network_interceptor.dart';
 import 'package:riverpod_clean_architecture/core/storage/secure_storage_service.dart';
 
 class ApiClient {
@@ -9,6 +11,7 @@ class ApiClient {
     required String baseUrl,
     required bool enableLogging,
     SecureStorageService? storageService,
+    NetworkInfo? networkInfo,
   }) : _dio = Dio(
           BaseOptions(
             baseUrl: baseUrl,
@@ -16,6 +19,9 @@ class ApiClient {
             receiveTimeout: const Duration(seconds: 15),
           ),
         ) {
+    if (networkInfo != null) {
+      _dio.interceptors.add(NetworkInterceptor(networkInfo));
+    }
     if (storageService != null) {
       _dio.interceptors.add(AuthInterceptor(storageService));
     }

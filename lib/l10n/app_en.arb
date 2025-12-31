@@ -1,0 +1,52 @@
+{
+  "@@locale": "en",
+  
+  "appTitle": "Finance Riverpod Clean Arch",
+  "@appTitle": {
+    "description": "Application title"
+  },
+  
+  "login": "Login",
+  "@login": {
+    "description": "Login button text"
+  },
+  "loginTitle": "Login (Finance Demo)",
+  "loginHeader": "Sign In",
+  "demoCredentials": "Demo credentials",
+  "demoCredentialsInfo": "Email: demo@example.com\nPassword: 123456",
+  "email": "Email",
+  "emailHint": "Enter your email",
+  "password": "Password",
+  "passwordHint": "Enter your password",
+  "emailRequired": "Email is required",
+  "emailInvalid": "Invalid email format",
+  "passwordRequired": "Password is required",
+  "passwordMinLength": "Password must be at least 6 characters",
+  
+  "errorServerBusy": "Server is experiencing issues. Please try again later.",
+  "errorServerGeneric": "Server error occurred. Please try again.",
+  "errorServerDefault": "An error occurred",
+  "errorNetwork": "No internet connection. Please check and try again.",
+  "errorNetworkTimeout": "Connection timeout, please try again",
+  "errorNetworkDisconnected": "No internet connection",
+  "errorUnauthorized": "Email or password is incorrect. Please try again.",
+  "errorUnauthorizedAccess": "You do not have access permission",
+  "errorValidation": "Invalid data.",
+  "errorNotFound": "Account does not exist.",
+  "errorCache": "Data storage error. Please try again.",
+  "errorUnexpected": "An error occurred. Please try again.",
+  "errorRequestCancelled": "Request was cancelled",
+  "errorUnknown": "Unknown error",
+  
+  "close": "Close",
+  "retry": "Retry",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "save": "Save",
+  "delete": "Delete",
+  "edit": "Edit",
+  "done": "Done",
+  "loading": "Loading...",
+  "noData": "No data",
+  "refresh": "Refresh"
+}

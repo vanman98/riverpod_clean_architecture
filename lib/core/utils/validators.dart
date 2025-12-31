@@ -1,7 +1,12 @@
+import 'package:flutter/widgets.dart';
+import 'package:riverpod_clean_architecture/l10n/app_localizations.dart';
+
 class Validators {
-  static String? email(String? value) {
+  static String? email(String? value, BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     if (value == null || value.isEmpty) {
-      return 'Email không được để trống';
+      return l10n.emailRequired;
     }
 
     final emailRegex = RegExp(
@@ -9,19 +14,21 @@ class Validators {
     );
 
     if (!emailRegex.hasMatch(value)) {
-      return 'Email không đúng định dạng';
+      return l10n.emailInvalid;
     }
 
     return null;
   }
 
-  static String? password(String? value) {
+  static String? password(String? value, BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     if (value == null || value.isEmpty) {
-      return 'Mật khẩu không được để trống';
+      return l10n.passwordRequired;
     }
 
     if (value.length < 6) {
-      return 'Mật khẩu phải có ít nhất 6 ký tự';
+      return l10n.passwordMinLength;
     }
 
     return null;

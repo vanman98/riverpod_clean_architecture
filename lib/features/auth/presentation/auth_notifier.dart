@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:riverpod_clean_architecture/core/errors/failure.dart';
 import 'package:riverpod_clean_architecture/core/usecases/usecase.dart';
@@ -22,7 +23,7 @@ class AuthNotifier extends _$AuthNotifier {
     return const AuthState();
   }
 
-  Future<void> login(String email, String password) async {
+  Future<void> login(String email, String password, BuildContext context) async {
     state = state.copyWith(isLoading: true, error: null);
 
     final result = await _loginUseCase(
@@ -33,7 +34,7 @@ class AuthNotifier extends _$AuthNotifier {
       (failure) {
         state = state.copyWith(
           isLoading: false,
-          error: failure.userMessage,
+          error: failure.localizedMessage(context),
         );
       },
       (user) {

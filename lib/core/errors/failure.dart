@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:riverpod_clean_architecture/l10n/app_localizations.dart';
 
 part 'failure.freezed.dart';
 
@@ -48,31 +49,29 @@ extension FailureX on Failure {
         unexpected: (message) => message,
       );
 
-  /// Get user-friendly error message (Vietnamese)
-  String get userMessage => when(
-        server: (message, statusCode) {
-          if (statusCode != null && statusCode >= 500) {
-            return 'Server đang gặp sự cố. Vui lòng thử lại sau.';
-          }
-          return message.isNotEmpty
-              ? message
-              : 'Đã có lỗi từ server. Vui lòng thử lại.';
-        },
-        network: (message) =>
-            'Không có kết nối internet. Vui lòng kiểm tra và thử lại.',
-        unauthorized: (message) =>
-            'Email hoặc mật khẩu không đúng. Vui lòng thử lại.',
-        validation: (message, errors) {
-          if (errors != null && errors.isNotEmpty) {
-            return errors.values.join('\n');
-          }
-          return message.isNotEmpty ? message : 'Dữ liệu không hợp lệ.';
-        },
-        notFound: (message) =>
-            message.isNotEmpty ? message : 'Tài khoản không tồn tại.',
-        cache: (message) => 'Lỗi lưu trữ dữ liệu. Vui lòng thử lại.',
-        unexpected: (message) => 'Đã có lỗi xảy ra. Vui lòng thử lại.',
-      );
+  /// Get user-friendly error message with localization
+  String localizedMessage(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return when(
+      server: (message, statusCode) {
+        if (statusCode != null && statusCode >= 500) {
+          return l10n.errorServerBusy;
+        }
+        return message.isNotEmpty ? message : l10n.errorServerGeneric;
+      },
+      network: (message) => l10n.errorNetwork,
+      unauthorized: (message) => l10n.errorUnauthorized,
+      validation: (message, errors) {
+        if (errors != null && errors.isNotEmpty) {
+          return errors.values.join('\n');
+        }
+        return message.isNotEmpty ? message : l10n.errorValidation;
+      },
+      notFound: (message) => message.isNotEmpty ? message : l10n.errorNotFound,
+      cache: (message) => l10n.errorCache,
+      unexpected: (message) => l10n.errorUnexpected,
+    );
+  }
 
   /// Check if error can be retried
   bool get canRetry => when(

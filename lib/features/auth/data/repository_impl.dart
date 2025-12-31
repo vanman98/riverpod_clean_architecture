@@ -25,15 +25,6 @@ class AuthRepositoryImpl implements AuthRepository {
     required String password,
   }) async {
     try {
-      // 1. Check network connectivity
-      final isConnected = await networkInfo.isConnected;
-      if (!isConnected) {
-        AppLogger.warning('Login failed: No internet connection', tag: 'Auth');
-        return const Left(Failure.network(
-          message: 'Không có kết nối internet. Vui lòng kiểm tra và thử lại.',
-        ));
-      }
-
       // 2. Log attempt
       AppLogger.info('Login attempt for: $email', tag: 'Auth');
       await CrashReporter.log('Login attempt for: $email');
