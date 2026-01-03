@@ -1,0 +1,12 @@
+name: feature
+description: Generate a new feature with Clean Architecture structure
+version: 0.1.0+1
+
+environment:
+  mason: ">=0.1.0-dev <1.0.0"
+
+vars:
+  feature_name:
+    type: string
+    description: Feature name (e.g. product, order, shop)
+    prompt: What is the feature name?
