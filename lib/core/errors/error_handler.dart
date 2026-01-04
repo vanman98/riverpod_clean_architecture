@@ -37,7 +37,7 @@ class ErrorHandler {
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
         return const Failure.network(
-          message: 'Kết nối timeout, vui lòng thử lại',
+          message: 'Connection timeout, please try again',
         );
 
       case DioExceptionType.badResponse:
@@ -45,23 +45,23 @@ class ErrorHandler {
 
       case DioExceptionType.cancel:
         return const Failure.unexpected(
-          message: 'Request đã bị hủy',
+          message: 'Request was cancelled',
         );
 
       case DioExceptionType.connectionError:
       case DioExceptionType.unknown:
         if (error.message?.contains('SocketException') ?? false) {
           return const Failure.network(
-            message: 'Không có kết nối internet',
+            message: 'No internet connection',
           );
         }
         return Failure.unexpected(
-          message: error.message ?? 'Lỗi không xác định',
+          message: error.message ?? 'Unknown error',
         );
 
       default:
         return const Failure.unexpected(
-          message: 'Đã có lỗi xảy ra, vui lòng thử lại',
+          message: 'An error occurred, please try again',
         );
     }
   }
@@ -77,7 +77,8 @@ class ErrorHandler {
         return Failure.unauthorized(message: message);
       case 403:
         return Failure.unauthorized(
-          message: message.isEmpty ? 'Bạn không có quyền truy cập' : message,
+          message:
+              message.isEmpty ? 'You do not have access permission' : message,
         );
       case 404:
         return Failure.notFound(message: message);
@@ -85,13 +86,14 @@ class ErrorHandler {
       case 502:
       case 503:
         return Failure.server(
-          message:
-              message.isEmpty ? 'Lỗi server, vui lòng thử lại sau' : message,
+          message: message.isEmpty
+              ? 'Server error, please try again later'
+              : message,
           statusCode: statusCode,
         );
       default:
         return Failure.server(
-          message: message.isEmpty ? 'Đã có lỗi xảy ra' : message,
+          message: message.isEmpty ? 'An error occurred' : message,
           statusCode: statusCode,
         );
     }
@@ -104,11 +106,11 @@ class ErrorHandler {
         return data['message'] ??
             data['error'] ??
             data['msg'] ??
-            'Đã có lỗi xảy ra';
+            'An error occurred';
       }
-      return 'Đã có lỗi xảy ra';
+      return 'An error occurred';
     } catch (_) {
-      return 'Đã có lỗi xảy ra';
+      return 'An error occurred';
     }
   }
 }
